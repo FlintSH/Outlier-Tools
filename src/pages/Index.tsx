@@ -68,23 +68,18 @@ const Index = () => {
     
     setIsSubmitting(true);
     try {
-      const webhookUrl = import.meta.env.VITE_DISCORD_WEBHOOK_URL;
-      
-      if (!webhookUrl) {
-        throw new Error('Discord webhook URL not configured');
-      }
-
-      const response = await fetch(webhookUrl, {
+      const response = await fetch('/api/suggestions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          content: `**New Tool Suggestion:**\n${suggestion}`,
-        }),
+        body: JSON.stringify({ suggestion }),
       });
 
-      if (!response.ok) throw new Error('Failed to submit');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to submit');
+      }
 
       toast({
         title: "Suggestion Submitted",
