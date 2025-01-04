@@ -13,7 +13,8 @@ export const ProjectChart = ({ data }: ProjectChartProps) => {
     earnings: Number((stats.totalEarnings - (stats.overtimePay || 0)).toFixed(2)),
     overtime: Number((stats.overtimePay || 0).toFixed(2)),
     hourlyRate: Number(stats.averageRate.toFixed(2)),
-    overtimePercentage: Number(((stats.overtimePay || 0) / stats.totalEarnings * 100).toFixed(1))
+    overtimePercentage: Number(((stats.overtimePay || 0) / stats.totalEarnings * 100).toFixed(1)),
+    hours: Number(stats.totalHours.toFixed(1))
   }));
 
   return (
@@ -46,6 +47,9 @@ export const ProjectChart = ({ data }: ProjectChartProps) => {
                         <p className="font-medium">{data.name}</p>
                         <p className="text-sm text-muted-foreground">
                           Average Rate: ${data.hourlyRate}/hr
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Hours Worked: {data.hours}h
                         </p>
                         {payload.map((item) => (
                           <p key={item.name} className="text-sm">
