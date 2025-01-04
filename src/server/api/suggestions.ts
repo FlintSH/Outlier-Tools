@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify';
 
 const suggestionsRoute: FastifyPluginAsync = async (fastify) => {
-  fastify.post('/api/suggestions', async (request, reply) => {
+  fastify.post('/suggestions', async (request, reply) => {
     const { suggestion } = request.body as { suggestion: string };
     
     if (!suggestion?.trim()) {
