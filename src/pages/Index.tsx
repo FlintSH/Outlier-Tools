@@ -68,7 +68,8 @@ const Index = () => {
     
     setIsSubmitting(true);
     try {
-      const response = await fetch('/api/suggestions', {
+      const serverUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
+      const response = await fetch(`${serverUrl}/api/suggestions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

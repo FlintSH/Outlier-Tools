@@ -14,8 +14,12 @@ await fastify.register(suggestionsRoute, { prefix: '/api' });
 
 const start = async () => {
   try {
-    await fastify.listen({ port: 3001 });
-    console.log('Server listening on port 3001');
+    const port = Number(process.env.SERVER_PORT) || 3001;
+    await fastify.listen({ 
+      port,
+      host: '0.0.0.0' // Allow external connections
+    });
+    console.log(`Server listening on port ${port}`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
