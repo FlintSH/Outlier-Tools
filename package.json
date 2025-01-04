@@ -9,8 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "bun run serve dist --port $PORT --host",
-    "postinstall": "bun install"
+    "start": "bun run serve dist --port $PORT --host"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
