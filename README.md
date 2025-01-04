@@ -13,7 +13,7 @@ A collection of free open-source tools to help Outlier experts better understand
   - Search by any date range or pay cycle
 
 - **More in the future...**
-  - You can submit your ideas for new tools to be added to Outlier Tools on the [Outlier Tools](https://outlier.fl1nt.dev) homepage.
+  - You can submit your ideas for new tools to be added to Outlier Tools on the [Outlier Tools](https://outlier.tools) homepage.
 
 ## Privacy
 
