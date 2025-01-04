@@ -1,3 +1,6 @@
+// This fastify server is just to handle the discord webhook for suggestions.
+// No user data is stored or processed through this server.
+
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import suggestionsRoute from './api/suggestions';
