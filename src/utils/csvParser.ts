@@ -147,6 +147,7 @@ export const calculateStats = (items: WorkItem[]): DashboardStats => {
     totalEarnings: totalEarnings + missionRewards,
     totalHours,
     averageHourlyRate: regularEarnings / (totalHours || 1),
+    averageHourlyRateWithRewards: (regularEarnings + missionRewards) / (totalHours || 1),
     missionRewards,
     projectStats,
     payTypeDistribution,

@@ -26,6 +26,7 @@ export interface DashboardStats {
   totalEarnings: number;
   totalHours: number;
   averageHourlyRate: number;
+  averageHourlyRateWithRewards: number;
   missionRewards: number;
   projectStats: Record<string, ProjectStats>;
   payTypeDistribution: Record<string, number>;

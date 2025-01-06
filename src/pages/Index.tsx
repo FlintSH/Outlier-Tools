@@ -24,6 +24,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const Index = () => {
   const [allItems, setAllItems] = useState<WorkItem[] | null>(null);
@@ -245,9 +251,13 @@ const Index = () => {
               icon={<Clock className="h-4 w-4" />}
             />
             <StatsCard
-              title="Avg. Hourly"
-              value={`$${stats?.averageHourlyRate.toFixed(2) || '0.00'}/hr`}
+              title="Avg. Hourly Rate"
+              value={`$${stats?.averageHourlyRateWithRewards.toFixed(2) || '0.00'}/hr`}
               icon={<TrendingUp className="h-4 w-4" />}
+              tooltip={stats && {
+                base: stats.averageHourlyRate,
+                withRewards: stats.averageHourlyRateWithRewards,
+              }}
             />
             <StatsCard
               title="Mission Rewards"
