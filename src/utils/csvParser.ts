@@ -31,7 +31,7 @@ export const getCurrentPayCycleDates = (): { start: Date; end: Date } => {
   const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ...
   const currentHour = now.getHours();
 
-  let start = new Date(now);
+  const start = new Date(now);
   
   // Adjust to previous Monday 7 PM CST
   const daysToSubtract = (currentDay + 6) % 7; // Days back to previous Monday

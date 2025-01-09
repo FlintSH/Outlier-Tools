@@ -20,16 +20,9 @@ import {
 } from "@/components/ui/dialog";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { ThemeToggle } from "@/components/ThemeProvider";
 
 const Index = () => {
   const [allItems, setAllItems] = useState<WorkItem[] | null>(null);
@@ -119,50 +112,52 @@ const Index = () => {
 
   return (
     <div className="container py-8 min-h-screen flex flex-col">
-      <div className="flex flex-col items-center mb-8">
-        <h1 className="text-4xl font-bold mb-2">Outlier Tools</h1>
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
+      <header className="mb-8 flex flex-col items-center">
+        <div className="w-full max-w-4xl relative flex flex-col items-center">
+          <h1 className="text-4xl font-bold mb-2">Outlier Tools</h1>
+          <div className="absolute right-0 top-0">
+            <ThemeToggle />
+          </div>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>by</span>
-            <a 
-              href="https://fl1nt.dev" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="hover:text-primary inline-flex items-center gap-1"
+            <a
+              href="https://github.com/FlintSH"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 hover:text-foreground transition-colors"
             >
-              <Avatar className="h-6 w-6">
-                <AvatarImage src="https://github.com/FlintSH.png" alt="FlintSH" />
+              <Avatar className="h-5 w-5">
+                <AvatarImage src="https://github.com/FlintSH.png" />
                 <AvatarFallback>FS</AvatarFallback>
               </Avatar>
-              <span>FlintSH</span>
-              <ExternalLink className="h-3 w-3" />
+              FlintSH
             </a>
-          </div>
-          <div className="flex gap-2">
+            <span>•</span>
             <a
-              href="https://github.com/FlintSH/Outlier-Tools"
+              href="https://github.com/FlintSH/outlier-tools"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 hover:text-primary"
+              className="flex items-center gap-1 hover:text-foreground transition-colors"
             >
               <Github className="h-4 w-4" />
-              <span>GitHub</span>
+              GitHub
             </a>
+            <span>•</span>
             <a
-              href="https://ko-fi.com/flintsh"
+              href="https://github.com/sponsors/FlintSH"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 hover:text-primary"
+              className="flex items-center gap-1 hover:text-foreground transition-colors"
             >
-              <Link className="h-4 w-4" />
-              <span>Donate</span>
+              <Gift className="h-4 w-4" />
+              Donate
             </a>
           </div>
+          <p className="mt-4 text-muted-foreground text-center max-w-2xl">
+            A collection of free open-source tools to help you better understand your Outlier account, entirely handled in-browser.
+          </p>
         </div>
-        <p className="mt-4 text-muted-foreground max-w-2xl text-center">
-          A collection of free open-source tools to help you better understand your Outlier account, entirely handled in-browser.
-        </p>
-      </div>
+      </header>
 
       {!allItems ? (
         <div className="grid gap-6 grid-cols-1 md:grid-cols-2 max-w-5xl mx-auto w-full px-4">
