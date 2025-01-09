@@ -7,6 +7,12 @@ interface ProjectChartProps {
   data: Record<string, ProjectStats>;
 }
 
+const CHART_COLORS = {
+  earnings: "#2563eb",
+  overtime: "#dc2626",
+  warning: "#ea580c"
+};
+
 export const ProjectChart = ({ data }: ProjectChartProps) => {
   const chartData = Object.entries(data).map(([name, stats]) => ({
     name,
@@ -27,8 +33,13 @@ export const ProjectChart = ({ data }: ProjectChartProps) => {
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData}>
-              <XAxis dataKey="name" />
-              <YAxis />
+              <XAxis 
+                dataKey="name" 
+                tick={{ fill: "hsl(var(--foreground))" }}
+              />
+              <YAxis 
+                tick={{ fill: "hsl(var(--foreground))" }}
+              />
               <Tooltip 
                 formatter={(value: number, name: string) => {
                   switch (name) {
@@ -39,6 +50,11 @@ export const ProjectChart = ({ data }: ProjectChartProps) => {
                     default:
                       return [`$${value}`, "Regular Earnings"];
                   }
+                }}
+                contentStyle={{
+                  backgroundColor: "hsl(var(--background))",
+                  borderColor: "hsl(var(--border))",
+                  borderRadius: "var(--radius)",
                 }}
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
@@ -57,11 +73,12 @@ export const ProjectChart = ({ data }: ProjectChartProps) => {
                         </p>
                         {payload.map((item) => (
                           <p key={item.name} className="text-sm">
-                            {item.name}: ${item.value}
+                            {item.name === "overtime" ? "Exceeded Time Pay" : "Regular Earnings"}: ${item.value}
                           </p>
                         ))}
                         {data.overtimePercentage > 50 && (
-                          <p className="text-sm text-destructive">
+                          <p className="text-sm text-[#dc2626] flex items-center gap-1">
+                            <AlertTriangle className="h-4 w-4" />
                             {data.overtimePercentage}% Exceeded Time Pay
                           </p>
                         )}
@@ -71,8 +88,18 @@ export const ProjectChart = ({ data }: ProjectChartProps) => {
                   return null;
                 }}
               />
-              <Bar dataKey="earnings" fill="#2563eb" stackId="a" name="Regular Earnings" />
-              <Bar dataKey="overtime" fill="#ef4444" stackId="a" name="Exceeded Time Pay" />
+              <Bar 
+                dataKey="earnings" 
+                fill={CHART_COLORS.earnings} 
+                stackId="a" 
+                name="Regular Earnings"
+              />
+              <Bar 
+                dataKey="overtime" 
+                fill={CHART_COLORS.overtime} 
+                stackId="a" 
+                name="Exceeded Time Pay"
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>

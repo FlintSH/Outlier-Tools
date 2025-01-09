@@ -7,7 +7,16 @@ interface DistributionChartProps {
   className?: string;
 }
 
-const COLORS = ["#2563eb", "#0ea5e9", "#3b82f6", "#60a5fa", "#93c5fd"];
+const COLORS = [
+  "#2563eb",
+  "#16a34a",
+  "#dc2626",
+  "#ca8a04",
+  "#9333ea",
+  "#0891b2",
+  "#ea580c",
+  "#be185d"
+];
 
 export const DistributionChart = ({ data, title, className }: DistributionChartProps) => {
   const chartData = Object.entries(data).map(([name, value]) => ({
@@ -33,12 +42,30 @@ export const DistributionChart = ({ data, title, className }: DistributionChartP
                 fill="#8884d8"
                 dataKey="value"
               >
-                {chartData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                {chartData.map((entry, index) => (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={COLORS[index % COLORS.length]}
+                    stroke="hsl(var(--background))"
+                    strokeWidth={2}
+                  />
                 ))}
               </Pie>
-              <Tooltip />
-              <Legend />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: "hsl(var(--background))",
+                  borderColor: "hsl(var(--border))",
+                  borderRadius: "var(--radius)",
+                }}
+                itemStyle={{
+                  color: "hsl(var(--foreground))"
+                }}
+              />
+              <Legend 
+                formatter={(value) => (
+                  <span style={{ color: "hsl(var(--foreground))" }}>{value}</span>
+                )}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>
