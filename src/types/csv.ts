@@ -20,6 +20,7 @@ export interface ProjectStats {
   averageRate: number;
   itemCount: number;
   overtimePay: number;
+  items: WorkItem[];
 }
 
 export interface DashboardStats {

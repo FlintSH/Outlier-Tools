@@ -111,7 +111,8 @@ export const calculateStats = (items: WorkItem[]): DashboardStats => {
         totalHours: 0,
         averageRate: 0,
         itemCount: 0,
-        overtimePay: 0
+        overtimePay: 0,
+        items: items.filter(i => i.projectName === item.projectName)
       };
     }
 

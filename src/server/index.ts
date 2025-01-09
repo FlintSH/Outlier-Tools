@@ -1,5 +1,6 @@
 // This fastify server is just to handle the discord webhook for suggestions.
 // No user data is stored or processed through this server.
+// If you are a contributor, do NOT send any user data to this server.
 
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
@@ -20,7 +21,7 @@ const start = async () => {
     const port = Number(process.env.SERVER_PORT) || 3001;
     await fastify.listen({ 
       port,
-      host: '0.0.0.0' // Allow external connections
+      host: '0.0.0.0'
     });
     console.log(`Server listening on port ${port}`);
   } catch (err) {

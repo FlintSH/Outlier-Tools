@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import { FileUpload } from "@/components/FileUpload";
 import { StatsCard } from "@/components/StatsCard";
-import { ProjectChart } from "@/components/ProjectChart";
+import { ProjectChart, ChartType } from "@/components/ProjectChart";
 import { DistributionChart } from "@/components/DistributionChart";
 import { parseCSV, calculateStats, getCurrentPayCycleDates, filterItemsByDateRange } from "@/utils/csvParser";
 import { DashboardStats, WorkItem } from "@/types/csv";
-import { DollarSign, Clock, TrendingUp, Gift, Github, Link, ExternalLink } from "lucide-react";
+import { DollarSign, Clock, TrendingUp, Gift, Github, AlertCircle, ExternalLink, Coffee } from "lucide-react";
 import { DatePickerWithRange } from "@/components/DatePickerWithRange";
 import { addDays } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { DateRange } from "react-day-picker";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +25,27 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { ThemeToggle } from "@/components/ThemeProvider";
 
+// FOR CONTRIBUTORS: Do not add to the changelog, I will do so from your PR.
+const CHANGELOG = [
+  {
+    date: "2024-01-09",
+    changes: [
+      "Added this changelog",
+      "Made chart colors better",
+      "Implemented dark mode",
+      "Added 3 new chart filters"
+    ]
+  },
+  {
+    date: "2024-01-08", 
+    changes: [
+      "Initial release",
+      "Added Pay Analyzer tool",
+      "Added suggestion submission"
+    ]
+  }
+];
+
 const Index = () => {
   const [allItems, setAllItems] = useState<WorkItem[] | null>(null);
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -33,6 +55,8 @@ const Index = () => {
   });
   const [suggestion, setSuggestion] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [chartType, setChartType] = useState<ChartType>("earningsByProject");
+  const [showChangelog, setShowChangelog] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -115,7 +139,14 @@ const Index = () => {
       <header className="mb-8 flex flex-col items-center">
         <div className="w-full max-w-4xl relative flex flex-col items-center">
           <h1 className="text-4xl font-bold mb-2">Outlier Tools</h1>
-          <div className="absolute right-0 top-0">
+          <div className="absolute right-0 top-0 flex items-center gap-2">
+            <button
+              onClick={() => setShowChangelog(true)}
+              className="text-sm flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <AlertCircle className="h-4 w-4" />
+              What's New
+            </button>
             <ThemeToggle />
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -144,12 +175,12 @@ const Index = () => {
             </a>
             <span>•</span>
             <a
-              href="https://github.com/sponsors/FlintSH"
+              href="https://ko-fi.com/flintsh"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 hover:text-foreground transition-colors"
             >
-              <Gift className="h-4 w-4" />
+              <Coffee className="h-4 w-4" />
               Donate
             </a>
           </div>
@@ -260,7 +291,13 @@ const Index = () => {
               icon={<Gift className="h-4 w-4" />}
             />
           </div>
-          {stats?.projectStats && <ProjectChart data={stats.projectStats} />}
+          {stats?.projectStats && (
+            <ProjectChart 
+              data={stats.projectStats} 
+              type={chartType}
+              onTypeChange={setChartType}
+            />
+          )}
           <div className="grid grid-cols-2 gap-4">
             {stats?.payTypeDistribution && (
               <DistributionChart
@@ -305,6 +342,37 @@ const Index = () => {
               <p className="leading-6">Upload the CSV file using the form above</p>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showChangelog} onOpenChange={setShowChangelog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5" />
+              What's New
+            </DialogTitle>
+            <DialogDescription>
+              Recent updates and improvements to Outlier Tools
+            </DialogDescription>
+          </DialogHeader>
+          <ScrollArea className="max-h-[60vh]">
+            <div className="space-y-6 pr-4">
+              {CHANGELOG.map((entry) => (
+                <div key={entry.date} className="relative pl-4">
+                  <div className="absolute left-0 top-0 h-full w-[2px] bg-muted" />
+                  <div className="font-medium mb-2">{entry.date}</div>
+                  <ul className="list-disc list-inside space-y-2">
+                    {entry.changes.map((change, i) => (
+                      <li key={i} className="text-sm text-muted-foreground">
+                        {change}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
 
