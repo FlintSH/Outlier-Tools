@@ -1,15 +1,21 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Info } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
+import { useCurrency } from "@/contexts/currency";
 
 interface StatsCardProps {
   title: string;
-  value: string;
+  value: string | number;
   icon?: React.ReactNode;
   tooltip?: {
     base: number;
@@ -18,7 +24,18 @@ interface StatsCardProps {
 }
 
 export const StatsCard = ({ title, value, icon, tooltip }: StatsCardProps) => {
+  const { formatAmount } = useCurrency();
   const rewardsAddition = tooltip ? (tooltip.withRewards - tooltip.base) : 0;
+
+  const formatValue = (val: string | number) => {
+    if (typeof val === 'string') {
+      if (val.startsWith('$')) {
+        return formatAmount(parseFloat(val.slice(1)));
+      }
+      return val;
+    }
+    return formatAmount(val);
+  };
 
   return (
     <Card>
@@ -28,7 +45,7 @@ export const StatsCard = ({ title, value, icon, tooltip }: StatsCardProps) => {
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold flex items-center gap-2">
-          {value}
+          {formatValue(value)}
           {tooltip && (
             <TooltipProvider delayDuration={0}>
               <Tooltip>
@@ -39,15 +56,15 @@ export const StatsCard = ({ title, value, icon, tooltip }: StatsCardProps) => {
                   <div className="flex flex-col gap-2">
                     <div className="flex justify-between items-center gap-8">
                       <span className="text-sm font-medium text-muted-foreground">Base Rate</span>
-                      <span className="text-sm">${tooltip.base.toFixed(2)}/hr</span>
+                      <span className="text-sm">{formatAmount(tooltip.base)}/hr</span>
                     </div>
                     <div className="flex justify-between items-center gap-8">
                       <span className="text-sm font-medium text-muted-foreground">Missions</span>
-                      <span className="text-sm text-green-500">+${rewardsAddition.toFixed(2)}/hr</span>
+                      <span className="text-sm text-green-500">+{formatAmount(rewardsAddition)}/hr</span>
                     </div>
                     <div className="flex justify-between items-center gap-8">
                       <span className="text-sm font-medium">Total</span>
-                      <span className="text-sm font-medium">${tooltip.withRewards.toFixed(2)}/hr</span>
+                      <span className="text-sm font-medium">{formatAmount(tooltip.withRewards)}/hr</span>
                     </div>
                   </div>
                 </TooltipContent>

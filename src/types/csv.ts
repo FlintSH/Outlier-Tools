@@ -33,3 +33,16 @@ export interface DashboardStats {
   payTypeDistribution: Record<string, number>;
   statusDistribution: Record<string, number>;
 }
+
+export interface Currency {
+  code: string;
+  name: string;
+  symbol: string;
+  rate: number;
+}
+
+export const POPULAR_CURRENCIES = [
+  "USD", "EUR", "GBP", "JPY", "AUD"
+];
+
+export const SUPPORTED_CURRENCIES: Currency[] = [];

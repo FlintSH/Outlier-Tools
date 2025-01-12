@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Bar, BarChart, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { Bar, BarChart, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ProjectStats } from "@/types/csv";
 import { AlertTriangle } from "lucide-react";
+import { ProjectStats } from "@/types/csv";
+import { useCurrency } from "@/contexts/currency";
 import { Button } from "@/components/ui/button";
 
 export type ChartType = "earningsByProject" | "earningsByDay" | "hoursByProject" | "hoursByDay";
@@ -16,8 +17,7 @@ interface ProjectChartProps {
 const CHART_COLORS = {
   earnings: "#2563eb",
   overtime: "#dc2626",
-  hours: "#16a34a",
-  warning: "#ea580c"
+  hours: "#16a34a"
 };
 
 const CHART_OPTIONS: { value: ChartType; label: string }[] = [
@@ -28,6 +28,8 @@ const CHART_OPTIONS: { value: ChartType; label: string }[] = [
 ];
 
 export const ProjectChart = ({ data, type, onTypeChange }: ProjectChartProps) => {
+  const { formatAmount } = useCurrency();
+
   const chartData = React.useMemo(() => {
     if (type === "earningsByDay" || type === "hoursByDay") {
       const dailyData: Record<string, { earnings: number; hours: number; overtime: number }> = {};
@@ -98,31 +100,17 @@ export const ProjectChart = ({ data, type, onTypeChange }: ProjectChartProps) =>
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData}>
-              <XAxis 
-                dataKey="name" 
+              <XAxis
+                dataKey="name"
                 tick={{ fill: "hsl(var(--foreground))" }}
               />
-              <YAxis 
+              <YAxis
                 tick={{ fill: "hsl(var(--foreground))" }}
+                tickFormatter={(value) => 
+                  type.startsWith("hours") ? `${value}h` : formatAmount(value).replace(/[A-Z]{3}\s*/g, '')
+                }
               />
-              <Tooltip 
-                formatter={(value: number, name: string) => {
-                  switch (name) {
-                    case "hours":
-                      return [`${value}h`, "Hours"];
-                    case "hourlyRate":
-                      return [`$${value}/hr`, "Average Rate"];
-                    case "overtime":
-                      return [`$${value}`, "Exceeded Time Pay"];
-                    default:
-                      return [`$${value}`, "Regular Earnings"];
-                  }
-                }}
-                contentStyle={{
-                  backgroundColor: "hsl(var(--background))",
-                  borderColor: "hsl(var(--border))",
-                  borderRadius: "var(--radius)",
-                }}
+              <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
@@ -135,7 +123,7 @@ export const ProjectChart = ({ data, type, onTypeChange }: ProjectChartProps) =>
                           <>
                             {data.hourlyRate && (
                               <p className="text-sm text-muted-foreground">
-                                Average Rate: ${data.hourlyRate}/hr
+                                Average Rate: {formatAmount(data.hourlyRate)}/hr
                               </p>
                             )}
                             <p className="text-sm text-muted-foreground">
@@ -147,11 +135,11 @@ export const ProjectChart = ({ data, type, onTypeChange }: ProjectChartProps) =>
                               </p>
                             )}
                             <p className="text-sm">
-                              Regular Earnings: ${data.earnings}
+                              Regular Earnings: {formatAmount(data.earnings)}
                             </p>
                             {data.overtime > 0 && (
                               <p className="text-sm">
-                                Exceeded Time Pay: ${data.overtime}
+                                Exceeded Time Pay: {formatAmount(data.overtime)}
                               </p>
                             )}
                             {data.overtimePercentage > 50 && (
@@ -169,23 +157,23 @@ export const ProjectChart = ({ data, type, onTypeChange }: ProjectChartProps) =>
                 }}
               />
               {type.startsWith("hours") ? (
-                <Bar 
-                  dataKey="hours" 
-                  fill={CHART_COLORS.hours} 
+                <Bar
+                  dataKey="hours"
+                  fill={CHART_COLORS.hours}
                   name="Hours"
                 />
               ) : (
                 <>
-                  <Bar 
-                    dataKey="earnings" 
-                    fill={CHART_COLORS.earnings} 
-                    stackId="a" 
+                  <Bar
+                    dataKey="earnings"
+                    fill={CHART_COLORS.earnings}
+                    stackId="a"
                     name="Regular Earnings"
                   />
-                  <Bar 
-                    dataKey="overtime" 
-                    fill={CHART_COLORS.overtime} 
-                    stackId="a" 
+                  <Bar
+                    dataKey="overtime"
+                    fill={CHART_COLORS.overtime}
+                    stackId="a"
                     name="Exceeded Time Pay"
                   />
                 </>

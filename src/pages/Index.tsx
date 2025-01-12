@@ -24,9 +24,19 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { ThemeToggle } from "@/components/ThemeProvider";
+import { CurrencyProvider } from "@/contexts/currency";
+import { CurrencySelect } from "@/components/CurrencySelect";
 
 // FOR CONTRIBUTORS: Do not add to the changelog, I will do so from your PR.
 const CHANGELOG = [
+  {
+    date: "2024-01-12",
+    changes: [
+      "Added currency conversion support",
+      "Fixed a bug where total earnings was not including mission rewards",
+      "Whitelisted all traffic from Outlier's GlobalProtect gateway"
+    ]
+  },
   {
     date: "2024-01-09",
     changes: [
@@ -46,7 +56,7 @@ const CHANGELOG = [
   }
 ];
 
-const Index = () => {
+const IndexContent = () => {
   const [allItems, setAllItems] = useState<WorkItem[] | null>(null);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [dateRange, setDateRange] = useState<DateRange>(() => {
@@ -263,7 +273,10 @@ const Index = () => {
               <Button variant="outline" size="sm" onClick={handlePreviousPayCycle}>Previous Pay Cycle</Button>
               <Button variant="outline" size="sm" onClick={() => handleLifetimeStats()}>Lifetime Stats</Button>
             </div>
-            <DatePickerWithRange date={dateRange} setDate={setDateRange} />
+            <div className="flex items-center gap-2">
+              <CurrencySelect />
+              <DatePickerWithRange date={dateRange} setDate={setDateRange} />
+            </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <StatsCard
@@ -371,6 +384,9 @@ const Index = () => {
                   </ul>
                 </div>
               ))}
+              <div className="relative pl-4 pt-4 border-t text-sm text-muted-foreground">
+                Thank you to all who <a href="https://ko-fi.com/flintsh" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">support Outlier Tools</a>: Owl
+              </div>
             </div>
           </ScrollArea>
         </DialogContent>
@@ -385,6 +401,14 @@ const Index = () => {
         </div>
       </footer>
     </div>
+  );
+};
+
+const Index = () => {
+  return (
+    <CurrencyProvider>
+      <IndexContent />
+    </CurrencyProvider>
   );
 };
 
