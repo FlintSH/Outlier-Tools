@@ -385,7 +385,7 @@ const IndexContent = () => {
                 </div>
               ))}
               <div className="relative pl-4 pt-4 border-t text-sm text-muted-foreground">
-                Thank you to all who <a href="https://ko-fi.com/flintsh" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">support Outlier Tools</a>: Owl
+                Thank you to all who <a href="https://ko-fi.com/flintsh" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">support Outlier Tools</a>!
               </div>
             </div>
           </ScrollArea>
