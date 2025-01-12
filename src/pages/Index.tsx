@@ -33,8 +33,8 @@ const CHANGELOG = [
     date: "2024-01-12",
     changes: [
       "Added currency conversion support",
-      "Fixed a bug where total earnings was not including mission rewards",
-      "Whitelisted all traffic from Outlier's GlobalProtect gateway"
+      "Fixed mission rewards not included in total earnings",
+      "Whitelisted Outlier GlobalProtect traffic"
     ]
   },
   {
