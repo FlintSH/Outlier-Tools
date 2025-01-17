@@ -93,6 +93,9 @@ export const calculateStats = (items: WorkItem[]): DashboardStats => {
   let totalSeconds = 0;
   let missionRewards = 0;
 
+  // Track unique task IDs per project
+  const projectTaskIds: Record<string, Set<string>> = {};
+
   items.forEach(item => {
     if (item.payType === "missionReward") {
       missionRewards += item.payout;
@@ -114,11 +117,12 @@ export const calculateStats = (items: WorkItem[]): DashboardStats => {
         overtimePay: 0,
         items: items.filter(i => i.projectName === item.projectName)
       };
+      projectTaskIds[item.projectName] = new Set();
     }
 
     projectStats[item.projectName].totalEarnings += item.payout;
     projectStats[item.projectName].totalHours += item.duration.totalSeconds / 3600;
-    projectStats[item.projectName].itemCount += 1;
+    projectTaskIds[item.projectName].add(item.itemID);
 
     if (item.payType === "overtimePay") {
       projectStats[item.projectName].overtimePay += item.payout;
@@ -129,6 +133,11 @@ export const calculateStats = (items: WorkItem[]): DashboardStats => {
 
     // Status distribution
     statusDistribution[item.status] = (statusDistribution[item.status] || 0) + 1;
+  });
+
+  // Set the itemCount based on unique task IDs
+  Object.keys(projectStats).forEach(project => {
+    projectStats[project].itemCount = projectTaskIds[project].size;
   });
 
   // Calculate average rates for projects

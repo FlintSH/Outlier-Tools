@@ -30,6 +30,13 @@ import { CurrencySelect } from "@/components/CurrencySelect";
 // FOR CONTRIBUTORS: Do not add to the changelog, I will do so from your PR.
 const CHANGELOG = [
   {
+    date: "2025-01-17",
+    changes: [
+      "Exceeded time no longer adds to the task count",
+      "Fixed a visual bug with the filtering buttons"
+    ]
+  },
+  {
     date: "2024-01-12",
     changes: [
       "Added currency conversion support",
@@ -142,6 +149,30 @@ const IndexContent = () => {
         to: new Date(sortedItems[sortedItems.length - 1].workDate)
       });
     }
+  };
+
+  const isCurrentPayCycle = () => {
+    if (!dateRange?.from || !dateRange?.to) return false;
+    const { start, end } = getCurrentPayCycleDates();
+    return dateRange.from.getTime() === start.getTime() && dateRange.to.getTime() === end.getTime();
+  };
+
+  const isPreviousPayCycle = () => {
+    if (!dateRange?.from || !dateRange?.to) return false;
+    const { start, end } = getCurrentPayCycleDates();
+    const prevStart = addDays(start, -7);
+    const prevEnd = addDays(end, -7);
+    return dateRange.from.getTime() === prevStart.getTime() && dateRange.to.getTime() === prevEnd.getTime();
+  };
+
+  const isLifetimeStats = () => {
+    if (!dateRange?.from || !dateRange?.to || !allItems || allItems.length === 0) return false;
+    const sortedItems = [...allItems].sort((a, b) => 
+      new Date(a.workDate).getTime() - new Date(b.workDate).getTime()
+    );
+    const firstDate = new Date(sortedItems[0].workDate);
+    const lastDate = new Date(sortedItems[sortedItems.length - 1].workDate);
+    return dateRange.from.getTime() === firstDate.getTime() && dateRange.to.getTime() === lastDate.getTime();
   };
 
   return (
@@ -269,9 +300,27 @@ const IndexContent = () => {
         <div className="w-full space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="flex justify-between items-center">
             <div className="flex gap-2">
-              <Button size="sm" onClick={handleCurrentPayCycle}>Current Pay Cycle</Button>
-              <Button variant="outline" size="sm" onClick={handlePreviousPayCycle}>Previous Pay Cycle</Button>
-              <Button variant="outline" size="sm" onClick={() => handleLifetimeStats()}>Lifetime Stats</Button>
+              <Button 
+                size="sm" 
+                variant={isCurrentPayCycle() ? "default" : "outline"}
+                onClick={handleCurrentPayCycle}
+              >
+                Current Pay Cycle
+              </Button>
+              <Button 
+                size="sm" 
+                variant={isPreviousPayCycle() ? "default" : "outline"}
+                onClick={handlePreviousPayCycle}
+              >
+                Previous Pay Cycle
+              </Button>
+              <Button 
+                size="sm" 
+                variant={isLifetimeStats() ? "default" : "outline"}
+                onClick={() => handleLifetimeStats()}
+              >
+                Lifetime Stats
+              </Button>
             </div>
             <div className="flex items-center gap-2">
               <CurrencySelect />
