@@ -3,9 +3,10 @@ import { FileUpload } from "@/components/FileUpload";
 import { StatsCard } from "@/components/StatsCard";
 import { ProjectChart, ChartType } from "@/components/ProjectChart";
 import { DistributionChart } from "@/components/DistributionChart";
+import { ProjectStatsGrid } from "@/components/ProjectStatsGrid";
 import { parseCSV, calculateStats, getCurrentPayCycleDates, filterItemsByDateRange } from "@/utils/csvParser";
 import { DashboardStats, WorkItem } from "@/types/csv";
-import { DollarSign, Clock, TrendingUp, Gift, Github, AlertCircle, ExternalLink, Coffee } from "lucide-react";
+import { DollarSign, Clock, TrendingUp, Gift, Github, AlertCircle, ExternalLink, Coffee, ChevronDown } from "lucide-react";
 import { DatePickerWithRange } from "@/components/DatePickerWithRange";
 import { addDays } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -26,9 +27,19 @@ import { useToast } from "@/components/ui/use-toast";
 import { ThemeToggle } from "@/components/ThemeProvider";
 import { CurrencyProvider } from "@/contexts/currency";
 import { CurrencySelect } from "@/components/CurrencySelect";
+import { cn } from "@/lib/utils";
 
 // FOR CONTRIBUTORS: Do not add to the changelog, I will do so from your PR.
 const CHANGELOG = [
+  {
+    date: "2025-01-24",
+    changes: [
+      "Added project breakdown grid",
+      "Projects are sorted by total hours worked",
+      "Added earnings, hours and tasks to project cards",
+      "Average minutes per task shown per project"
+    ]
+  },
   {
     date: "2025-01-17",
     changes: [
@@ -74,6 +85,7 @@ const IndexContent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [chartType, setChartType] = useState<ChartType>("earningsByProject");
   const [showChangelog, setShowChangelog] = useState(false);
+  const [showProjectBreakdown, setShowProjectBreakdown] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -354,11 +366,43 @@ const IndexContent = () => {
             />
           </div>
           {stats?.projectStats && (
-            <ProjectChart 
-              data={stats.projectStats} 
-              type={chartType}
-              onTypeChange={setChartType}
-            />
+            <div className="rounded-xl border bg-card">
+              <div className="p-6">
+                <ProjectChart 
+                  data={stats.projectStats} 
+                  type={chartType}
+                  onTypeChange={setChartType}
+                />
+                <div className="mt-6 border-t pt-4">
+                  <button
+                    onClick={() => setShowProjectBreakdown(!showProjectBreakdown)}
+                    className={cn(
+                      "flex items-center justify-between w-full rounded-lg py-2 px-3 group",
+                      !showProjectBreakdown && "bg-accent/50 hover:bg-accent/70 transition-colors"
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-lg font-semibold">Project Breakdown</h3>
+                      <span className="px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full">NEW</span>
+                    </div>
+                    <ChevronDown 
+                      className={cn(
+                        "h-5 w-5 text-muted-foreground transition-transform duration-200",
+                        showProjectBreakdown && "transform rotate-180"
+                      )} 
+                    />
+                  </button>
+                  <div className={cn(
+                    "grid transition-all duration-200 ease-in-out",
+                    showProjectBreakdown ? "grid-rows-[1fr] opacity-100 mt-4" : "grid-rows-[0fr] opacity-0"
+                  )}>
+                    <div className="overflow-hidden">
+                      <ProjectStatsGrid projectStats={stats.projectStats} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
           <div className="grid grid-cols-2 gap-4">
             {stats?.payTypeDistribution && (
