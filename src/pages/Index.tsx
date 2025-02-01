@@ -6,7 +6,7 @@ import { DistributionChart } from "@/components/DistributionChart";
 import { ProjectStatsGrid } from "@/components/ProjectStatsGrid";
 import { parseCSV, calculateStats, getCurrentPayCycleDates, filterItemsByDateRange } from "@/utils/csvParser";
 import { DashboardStats, WorkItem } from "@/types/csv";
-import { DollarSign, Clock, TrendingUp, Gift, Github, AlertCircle, ExternalLink, Coffee, ChevronDown } from "lucide-react";
+import { DollarSign, Clock, TrendingUp, Gift, Github, AlertCircle, Upload, Coffee, ChevronDown } from "lucide-react";
 import { DatePickerWithRange } from "@/components/DatePickerWithRange";
 import { addDays } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,12 @@ import { cn } from "@/lib/utils";
 
 // FOR CONTRIBUTORS: Do not add to the changelog, I will do so from your PR.
 const CHANGELOG = [
+  {
+    date: "2025-02-01",
+    changes: [
+      "Added a button to select a new CSV file",
+    ]
+  },
   {
     date: "2025-01-24",
     changes: [
@@ -86,6 +92,7 @@ const IndexContent = () => {
   const [chartType, setChartType] = useState<ChartType>("earningsByProject");
   const [showChangelog, setShowChangelog] = useState(false);
   const [showProjectBreakdown, setShowProjectBreakdown] = useState(false);
+  const [selectCsvDialogOpen, setSelectCsvDialogOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -99,6 +106,7 @@ const IndexContent = () => {
   const handleFileLoaded = (content: string) => {
     const items: WorkItem[] = parseCSV(content);
     setAllItems(items);
+    setSelectCsvDialogOpen(false);
   };
 
   const handleCurrentPayCycle = () => {
@@ -240,6 +248,27 @@ const IndexContent = () => {
           <p className="mt-4 text-muted-foreground text-center max-w-2xl">
             A collection of free open-source tools to help you better understand your Outlier account, entirely handled in-browser.
           </p>
+          {allItems && (
+            <div className="mt-6">
+              <Dialog open={selectCsvDialogOpen} onOpenChange={setSelectCsvDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Upload className="h-4 w-4" />
+                    Select New CSV
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Select New CSV</DialogTitle>
+                    <DialogDescription>
+                      Select a new CSV file to analyze different data
+                    </DialogDescription>
+                  </DialogHeader>
+                  <FileUpload onFileLoaded={handleFileLoaded} />
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
         </div>
       </header>
 
