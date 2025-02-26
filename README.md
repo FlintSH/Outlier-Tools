@@ -1,3 +1,9 @@
+### As of January 25th, 2025 - Outlier Tools is now depreciated and unmaintained. Why?
+> I am now working as an engineer at Scale AI directly! Working on Outlier, I can ship features that natively improve the product without the need for something like Outlier Tools.
+> Thanks to all who supported the project and found it useful, if it weren't for that I wouldn't have this job! <3
+>
+> If someone wants to fork and pick up the torch, feel free! Outlier Tools will remain available at its domain and this repository isn't going anywhere.
+
 # Outlier Tools
 
 A collection of free open-source tools to help Outlier experts better understand their earnings and work statistics. All data processing is done locally in browser - data never leaves your device.
